@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+
+<launch>
+  <arg name="gui"       default="true"/>
+  <arg name="rviz"      default="true"/>
+  <arg name="config"    default="base" />
+  <arg name="world"     default="$(find jackal_gazebo)/worlds/jackal_race.world"/>
+  <!-- <arg name="odom_topic"       default="odometry/filtered"/> -->
+  <arg name="odom_topic"       default="odom_ground_truth"/>
+  <arg name="ns1"       default="jackal1"/>
+  <arg name="ns2"       default="jackal2"/>
+  <arg name="ns3"       default="jackal3"/>
+  <arg name="x1"       default="3"/>
+  <arg name="y1"       default="7"/>
+  <arg name="z1"       default="2"/>
+  <arg name="x2"       default="5"/>
+  <arg name="y2"       default="-4"/>
+  <arg name="z2"       default="2"/>
+  <arg name="x3"       default="-5"/>
+  <arg name="y3"       default="4"/>
+  <arg name="z3"       default="2"/>
+
+  <!-- Start Gazebo. -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="use_sim_time" value="true"/>
+    <arg name="gui"          value="$(arg gui)"/>
+    <arg name="world_name"   value="$(arg world)"/>
+    <arg name="debug" value="0" />
+    <arg name="headless" value="false" />
+  </include>
+
+  <!-- Spawn the robots. -->
+  <include file="$(find multi_jackal_base)/launch/base_jackal.launch">
+    <arg name="ns"            value="$(arg ns1)"/>
+    <arg name="config"        value="$(arg config)"/>
+    <arg name="x"             value="$(arg x1)"/>
+    <arg name="y"             value="$(arg y1)"/>
+    <arg name="z"             value="$(arg z1)"/>
+  </include>
+  <include file="$(find multi_jackal_base)/launch/base_jackal.launch">
+    <arg name="ns"            value="$(arg ns2)"/>
+    <arg name="config"        default="$(arg config)" />
+    <arg name="x"             value="$(arg x2)"/>
+    <arg name="y"             value="$(arg y2)"/>
+    <arg name="z"             value="$(arg z2)"/>
+  </include>
+  <include file="$(find multi_jackal_base)/launch/base_jackal.launch">
+    <arg name="ns"            value="$(arg ns3)"/>
+    <arg name="config"        default="$(arg config)" />
+    <arg name="x"             value="$(arg x3)"/>
+    <arg name="y"             value="$(arg y3)"/>
+    <arg name="z"             value="$(arg z3)"/>
+  </include>
+  
+  <!-- View in RVIZ. -->
+  <group if="$(arg rviz)">
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find multi_jackal_base)/rviz/two_jackals.rviz" >
+    </node>
+  </group>
+
+
+
+</launch>

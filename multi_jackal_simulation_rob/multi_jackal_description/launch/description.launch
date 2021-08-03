@@ -1,0 +1,21 @@
+<launch>
+  <arg name="ns"        default="jackal"/>
+  <arg name="config"    default="base" />
+  <arg name="config_id" default="1"/>
+  <!-- fix for oneweek project -->
+  <!-- <arg name="env_runner" value="$(eval 'env_run' if not optenv('OS', 'unknown').lower().startswith('windows') else 'env_run.bat')" /> -->
+  <!-- the following seems to work too when in devel space, but not in install_isolated -->
+  <arg name="env_runner" value="env_run" />
+
+  <param name="/$(arg ns)/robot_description"
+         command="$(find multi_jackal_description)/scripts/$(arg env_runner)
+                    $(find multi_jackal_description)/urdf/configs/$(arg config)
+                    $(find xacro)/xacro $(find multi_jackal_description)/urdf/jackal_all.urdf.xacro
+                    --inorder 'namespace:=$(arg ns)' 'config_id:=$(arg config_id)'" />
+
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" ns="$(arg ns)">
+    <param name="tf_prefix"         value="$(arg ns)"/>
+    <param name="robot_description" value="/$(arg ns)/robot_description"/>
+  </node>
+  
+</launch>

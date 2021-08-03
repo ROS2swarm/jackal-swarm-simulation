@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+
+<launch>
+  <arg name="ns"        default="jackal1"/>			<!-- Must be unique for each robot. -->
+  <arg name="x"         default="0"/>
+  <arg name="y"         default="0"/>
+  <arg name="z"         default="0"/>
+  <arg name="roll"      default="0"/>
+  <arg name="pitch"     default="0"/>
+  <arg name="yaw"       default="0"/>
+  <arg name="config"    default="base" /> 		<!-- options in description/urdf/configs-->
+  <arg name="config_id" default="1"/>  
+  <arg name="use_move_base"  default="false"/> <!-- Allows navigation to a location. -->
+
+  <!-- Load Jackal's description, controllers -->
+  <include file="$(find multi_jackal_description)/launch/description.launch">
+    <arg name="ns"        value="$(arg ns)"/>
+    <arg name="config"    value="$(arg config)" />
+    <arg name="config_id" value="$(arg config_id)"/>
+  </include>
+  <include file="$(find multi_jackal_control)/launch/control.launch" >
+    <arg name="ns"        value="$(arg ns)"/>
+    <arg name="x"         value="$(arg x)"/>
+    <arg name="y"         value="$(arg y)"/>
+    <arg name="z"         value="$(arg z)"/>
+    <arg name="roll"      value="$(arg roll)"/>
+    <arg name="pitch"     value="$(arg pitch)"/>
+    <arg name="yaw"       value="$(arg yaw)"/>
+  </include>
+
+  <node pkg="pointcloud_to_laserscan" type="pointcloud_to_laserscan_node" name="$(arg ns)_pointcloud_to_laserscan">
+
+    <remap from="cloud_in" to="$(arg ns)/os1_cloud_node/points"/>
+    <remap from="scan" to="$(arg ns)/scan/"/>
+    <rosparam>
+        transform_tolerance: 0.01
+        min_height: -0.3
+        max_height: 2.0
+
+        angle_min: -3.1415
+        angle_max: 3.1415
+        angle_increment: 0.01
+        scan_time: 0.1
+        range_min: 0.8
+        range_max: 5.0
+        use_inf: true
+        concurrency_level: 0
+    </rosparam>
+
+  </node>
+
+  <!-- Spawn Jackal -->
+  <node name="$(arg ns)_urdf_spawner" pkg="gazebo_ros" type="spawn_model"
+        args="-x $(arg x) -y $(arg y) -z $(arg z) -R $(arg roll) -P $(arg pitch) -Y $(arg yaw)
+        -urdf -param /$(arg ns)/robot_description -model $(arg ns)"/>
+
+</launch>

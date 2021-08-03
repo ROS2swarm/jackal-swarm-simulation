@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+
+<launch>
+  <!-- namespace -->
+  <arg name="ns" default="jackal1"/>
+  <arg name="x"     default="0"/>
+  <arg name="y"     default="0"/>
+  <arg name="z"     default="0"/>
+  <arg name="roll"  default="0"/>
+  <arg name="pitch" default="0"/>
+  <arg name="yaw"   default="0"/>
+
+
+  <group if="$(optenv JACKAL_CONTROL_EXTRAS 0)" >
+    <rosparam command="load" file="$(env JACKAL_CONTROL_EXTRAS_PATH)" />
+  </group>
+
+  <rosparam command="load" file="$(find multi_jackal_control)/config/control.yaml" ns="$(arg ns)" />
+  <param name="$(arg ns)/jackal_velocity_controller/odom_frame_id" value="$(arg ns)/odom"/>
+  <param name="$(arg ns)/jackal_velocity_controller/base_frame_id" value="$(arg ns)/base_link"/>
+
+  <node name="controller_spawner" pkg="controller_manager" type="spawner"
+        args="jackal_joint_publisher jackal_velocity_controller" ns="$(arg ns)"/>
+
+  <!-- Control marker for manual control using RVIZ. -->
+  <node pkg="interactive_marker_twist_server" type="marker_server" name="twist_marker_server" ns="$(arg ns)">
+    <remap from="twist_marker_server/cmd_vel" to="jackal_velocity_controller/cmd_vel" />
+    <param name="link_name" value="$(arg ns)/base_link"/>
+  </node> 
+
+  <!-- local EKF from IMU and wheel odometry -->
+  <node pkg="robot_localization" type="ekf_localization_node" name="ekf_localization"  ns="$(arg ns)" output="screen">
+    <rosparam command="load" file="$(find multi_jackal_control)/config/robot_localization.yaml" />
+    <param name="odom0"     value="jackal_velocity_controller/odom"/>
+    <param name="imu0"     value="imu/data"/>
+    <param name="map_frame"       value="/map"/>
+    <!-- <param name="map_frame"       value="$(arg ns)/map"/> -->
+    <param name="odom_frame"      value="$(arg ns)/odom"/>
+    <param name="base_link_frame" value="$(arg ns)/base_link"/>
+    <param name="world_frame"     value="$(arg ns)/odom"/>
+    <!-- <remap from="odometry/filtered" to="odometry/local_filtered"/> -->
+  </node>
+
+  <!-- If the Jackals do not have a global position estimate (i.e. something to
+       publish the map->odom link, usually a 'robot_localization' node with GPS),
+       Then the transform from map->odom can be produced statically. The start 
+       position must match the start position used in Gazebo but Gazebo will 
+       handle rotation transform.
+       (x y z yaw pitch roll frame_id child_frame_id period_in_ms) -->
+  <node pkg="tf" type="static_transform_publisher" name="static_map_odom_tf" ns="$(arg ns)"
+        args="$(arg x) $(arg y) $(arg z) 0 0 0 /map $(arg ns)/odom 100"/>
+
+  <node pkg="twist_mux" type="twist_mux" name="twist_mux" ns="$(arg ns)">
+    <rosparam command="load" file="$(find multi_jackal_control)/config/twist_mux.yaml" />
+    <remap from="cmd_vel_out" to="jackal_velocity_controller/cmd_vel"/>
+  </node>
+
+</launch>

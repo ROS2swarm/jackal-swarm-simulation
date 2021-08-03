@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+
+<launch>
+  <arg name="gui"       default="true"/>
+  <arg name="rviz"      default="true"/>
+  <arg name="config"    default="base" />
+  <arg name="world"     default="$(find jackal_gazebo)/worlds/jackal_race.world"/>
+  <arg name="ns1"       default="jackal1"/>
+  <arg name="ns2"       default="jackal2"/>
+
+
+
+  
+
+  <!-- Spawn the robots. -->
+  <include file="$(find multi_jackal_base)/launch/base_jackal.launch">
+    <arg name="ns"            value="$(arg ns1)"/>
+    <arg name="config"        value="$(arg config)"/>
+    <!-- <arg name="x"             value="5"/>
+    <arg name="y"             value="5"/> -->
+  </include>
+  <include file="$(find multi_jackal_base)/launch/base_jackal.launch">
+    <arg name="ns"            value="$(arg ns2)"/>
+    <arg name="config"        default="$(arg config)" />
+    <arg name="x"             value="1"/>
+    <arg name="y"             value="1"/>
+  </include>
+  
+
+
+
+</launch>
