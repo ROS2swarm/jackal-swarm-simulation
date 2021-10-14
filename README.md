@@ -22,3 +22,5 @@ Start the Jackal Simulation with the number of robots as an argument
 ``python2 Jackal_launch_multi.launch.py 5``
 
 Run the ROS2Swarm package with -v 1 argument in the restart.sh script
+
+To turn on LIDAR visualisation change visualize tag in OS1-64urdf.xacro
