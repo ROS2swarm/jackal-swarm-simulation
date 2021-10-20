@@ -53,11 +53,11 @@ ssh administrator@192.169.131.1_1
 Install ROS2 and ROS bridge on Jackal. Follow [this](https://docs.ros.org/en/dashing/Installation/Ubuntu-Install-Debians.html) guide for ROS2.
 Bridge like above.
 Clone ROS2swarm repo, checkout branch JackalTests. This branch has the changes in the topic names included. 
-Master on real Jackal is already started, only need to start the bridge.
+Master on real Jackal is already started, only needed to start the bridge. Bridge.sh script included in JackalTests branch.
 ```
 bash Bridge.sh
 ```
-LIDAR needs to be turned on manually. All the Jackals have a os1_lidar.launch script that starts the LIDAR and includes the remapping to a 2D scan. Script is on the Nvidia Jetson. Access seperately and launch script:
+LIDAR needs to be turned on manually. All the Jackals have a os1_lidar.launch script that starts the LIDAR nodes and includes the remapping to a 2D scan. Script is on the Nvidia Jetson. Access seperately and launch script:
 ```
 ssh nvidia@192.168.131.1_2
 roslaunch os1_lidar.launch
@@ -68,8 +68,9 @@ ping -c1 os1-[number printed on the LIDAR].local
 ```
 and adjust in "os1_lidar.launch".
 
-If LIDAR and the bridge are running the ROS2swarm package can be started on each Jackal.  Make sure again that -v tag is 1 and -n tag is 1 as well.
+If LIDAR and the bridge are running the ROS2swarm package can be started on each Jackal.  Make sure again that -v tag is 1 and -n tag is 1 as well. Open another terminal of the administrator and run:
 ```
+cd ba-tavia-plattenteich
 bash restart.sh
 ```
 
