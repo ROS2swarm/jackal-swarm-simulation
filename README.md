@@ -22,6 +22,8 @@ Run Jackal_launch_multi.launch.py with amount of robots:
 python2 Jackal_launch_multi.launch.py 5
 ```
 
+To turn on LIDAR visualisation change visualize tag of LIDAR in OS1-64urdf.xacro to true
+
 **To run with the swarm package:**
 
 Install [ROS bridge](https://github.com/ros2/ros1_bridge) either from source or binaries:
@@ -42,4 +44,4 @@ python2 Jackal_launch_multi.launch.py 5
 
 Run the ROS2Swarm package with -v 1 argument in the restart.sh script and the correct amount of robots from the simulation.
 
-To turn on LIDAR visualisation change visualize tag of LIDAR in OS1-64urdf.xacro to true
+
