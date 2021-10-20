@@ -32,7 +32,7 @@ Make sure to source ROS versions directly and not have anything sourced precious
 
 Run the ROS bridge. The Run2.sh script can be used for that. It starts the master and the bridge in separate terminals and takes care of sourcing the ROS distros.
 ```
-bash Run2.sh
+bash Master_bridge.sh
 ```
 
 Start the Jackal Simulation with the number of robots as an argument    
