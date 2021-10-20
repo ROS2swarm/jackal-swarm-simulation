@@ -46,7 +46,7 @@ Run the ROS2Swarm package with -v 1 argument in the restart.sh script and the co
 
 **To run with the swarm package on real Jackals:**     
 
-Connect to Jackal administrator via ssh.
+Connect to Jackal administrator via ssh. Replace _ with Jackal identifier number.
 ```
 ssh administrator@192.169.131.1_1
 ```
