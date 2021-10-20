@@ -24,7 +24,7 @@ python2 Jackal_launch_multi.launch.py 5
 
 To turn on LIDAR visualisation change visualize tag of LIDAR in OS1-64urdf.xacro to true
 
-**To run with the swarm package:**
+**To run with the swarm package in simulation:**
 
 Install [ROS bridge](https://github.com/ros2/ros1_bridge) either from source or binaries:
 ```
@@ -44,4 +44,32 @@ python2 Jackal_launch_multi.launch.py 5
 
 Run the ROS2Swarm package with -v 1 argument in the restart.sh script and the correct amount of robots from the simulation.
 
+**To run with the swarm package on real Jackals:**     
+
+Connect to Jackal administrator via ssh.
+```
+ssh administrator@192.169.131.1_1
+```
+Install ROS2 and ROS bridge on Jackal. Follow [this](https://docs.ros.org/en/dashing/Installation/Ubuntu-Install-Debians.html) guide for ROS2.
+Bridge like above.
+Clone ROS2swarm repo, checkout branch JackalTests. This branch has the changes in the topic names included. 
+Master on real Jackal is already started, only need to start the bridge.
+```
+bash Bridge.sh
+```
+LIDAR needs to be turned on manually. All the Jackals have a os1_lidar.launch script that starts the LIDAR and includes the remapping to a 2D scan. Script is on the Nvidia Jetson. Access seperately and launch script:
+```
+ssh nvidia@192.168.131.1_2
+roslaunch os1_lidar.launch
+```
+IP address of LIDAR changes sometimes and the launch won't work. Check IP address of LIDAR with:
+```
+ping -c1 os1-[number printed on the LIDAR].local
+```
+and adjust in "os1_lidar.launch".
+
+If LIDAR and the bridge are running the ROS2swarm package can be started on each Jackal.  Make sure again that -v tag is 1 and -n tag is 1 as well.
+```
+bash restart.sh
+```
 
