@@ -70,7 +70,7 @@ and adjust in "os1_lidar.launch".
 
 If LIDAR and the bridge are running the ROS2swarm package can be started on each Jackal.  Make sure again that -v tag is 1 and -n tag is 1 as well. Open another terminal of the administrator and run:
 ```
-cd ba-tavia-plattenteich
+cd ROS2swarm
 bash restart.sh
 ```
 
